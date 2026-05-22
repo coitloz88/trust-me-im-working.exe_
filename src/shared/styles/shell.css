@@ -319,7 +319,7 @@ body {
 }
 
 .editor__content {
-  padding: 8px 0;
+  padding: 8px 0 8px 16px;
   flex: 1;
   white-space: pre;
   line-height: 19px;
