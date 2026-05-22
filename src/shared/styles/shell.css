@@ -20,8 +20,8 @@ body {
 
 .shell {
   display: grid;
-  grid-template-rows: var(--vsc-h-titlebar) 1fr var(--vsc-h-statusbar);
-  grid-template-columns: var(--vsc-w-activitybar) var(--vsc-w-sidebar) 1fr;
+  grid-template-rows: var(--vsc-h-titlebar) minmax(0, 1fr) var(--vsc-h-statusbar);
+  grid-template-columns: var(--vsc-w-activitybar) var(--vsc-w-sidebar) minmax(0, 1fr);
   grid-template-areas:
     'titlebar titlebar titlebar'
     'activitybar sidebar editor'
@@ -229,7 +229,7 @@ body {
 .editor-column {
   grid-area: editor;
   display: grid;
-  grid-template-rows: var(--vsc-h-tabs) 1fr var(--vsc-h-terminal);
+  grid-template-rows: var(--vsc-h-tabs) minmax(0, 1fr) var(--vsc-h-terminal);
   min-width: 0;
   background: var(--vsc-bg-editor);
 }
