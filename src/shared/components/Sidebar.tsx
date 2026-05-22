@@ -1,13 +1,7 @@
 import type { ReactNode } from 'react'
-
-type TreeNode = {
-  label: string
-  icon: string
-  type: 'folder' | 'file'
-  depth: number
-  open?: boolean
-  active?: boolean
-}
+import { useMatch, useNavigate } from 'react-router-dom'
+import { gameRegistry } from '../../games/registry'
+import { FileIcon } from './icons'
 
 type ActivityIcon = {
   id: string
@@ -86,24 +80,7 @@ const ACTIVITY_ICONS: ActivityIcon[] = [
   },
 ]
 
-const TREE: TreeNode[] = [
-  { label: 'trust-me-im-working.exe_', icon: '📂', type: 'folder', depth: 0, open: true },
-  { label: 'src', icon: '📂', type: 'folder', depth: 1, open: true },
-  { label: 'auth', icon: '📂', type: 'folder', depth: 2, open: true },
-  { label: 'oauth.service.ts', icon: '🟦', type: 'file', depth: 3, active: true },
-  { label: 'jwt.middleware.ts', icon: '🟦', type: 'file', depth: 3 },
-  { label: 'session.store.ts', icon: '🟦', type: 'file', depth: 3 },
-  { label: 'users', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'api', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'hooks', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'components', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'utils', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'db', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'infra', icon: '📁', type: 'folder', depth: 2 },
-  { label: 'package.json', icon: '🟨', type: 'file', depth: 1 },
-  { label: 'tsconfig.json', icon: '🟦', type: 'file', depth: 1 },
-  { label: 'README.md', icon: '📘', type: 'file', depth: 1 },
-]
+const ROOT_FOLDER = 'trust-me-im-working.exe_'
 
 function ActivityBar() {
   return (
@@ -125,25 +102,29 @@ function ActivityBar() {
 }
 
 function Tree() {
+  const navigate = useNavigate()
+  const match = useMatch('/games/:gameId')
+  const activeId = match?.params.gameId
+
   return (
     <div className="sidebar__tree">
-      <div className="sidebar__section-title">trust-me-im-working.exe_</div>
-      {TREE.slice(1).map((node, i) => (
+      <div className="sidebar__section-title">{ROOT_FOLDER}</div>
+      {gameRegistry.map((game) => (
         <div
-          key={i}
-          className={'tree__node' + (node.active ? ' tree__node--active' : '')}
-          style={{ paddingLeft: 8 + (node.depth - 1) * 12 }}
+          key={game.id}
+          className={
+            'tree__node' +
+            (game.id === activeId ? ' tree__node--active' : '')
+          }
+          onClick={() => navigate(`/games/${game.id}`)}
+          style={{ paddingLeft: 8 }}
+          title={game.displayName}
         >
-          <span
-            className={
-              'tree__chevron' +
-              (node.type === 'file' ? ' tree__chevron--empty' : '')
-            }
-          >
-            {node.type === 'folder' ? (node.open ? '▾' : '▸') : ''}
+          <span className="tree__chevron tree__chevron--empty" />
+          <span className="tree__icon">
+            <FileIcon />
           </span>
-          <span className="tree__icon">{node.icon}</span>
-          <span className="tree__label">{node.label}</span>
+          <span className="tree__label">{game.fileName}</span>
         </div>
       ))}
     </div>

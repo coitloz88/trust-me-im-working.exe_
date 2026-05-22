@@ -1,30 +1,22 @@
-type Tab = {
-  icon: string
-  label: string
-  active?: boolean
-  dirty?: boolean
-}
-
-const TABS: Tab[] = [
-  { icon: '🟦', label: 'oauth.service.ts', active: true, dirty: true },
-  { icon: '🟦', label: 'user.repository.ts' },
-  { icon: '🟨', label: 'package.json' },
-  { icon: '📘', label: 'README.md' },
-]
+import { useMatch } from 'react-router-dom'
+import { gameRegistry } from '../../games/registry'
+import { FileIcon } from './icons'
 
 export function Tabs() {
+  const match = useMatch('/games/:gameId')
+  const game = gameRegistry.find((g) => g.id === match?.params.gameId)
+
   return (
     <div className="tabs">
-      {TABS.map((tab) => (
-        <div
-          key={tab.label}
-          className={'tab' + (tab.active ? ' tab--active' : '')}
-        >
-          <span className="tab__icon">{tab.icon}</span>
-          <span>{tab.label}</span>
-          <span className="tab__close">{tab.dirty ? '●' : '×'}</span>
+      {game && (
+        <div className="tab tab--active" key={game.id}>
+          <span className="tab__icon">
+            <FileIcon />
+          </span>
+          <span>{game.fileName}</span>
+          <span className="tab__close">×</span>
         </div>
-      ))}
+      )}
     </div>
   )
 }
