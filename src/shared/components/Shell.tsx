@@ -18,8 +18,12 @@ export function Shell() {
       <Sidebar />
       <div className="editor-column">
         <Tabs />
-        {isDecoy ? <DecoyEditor /> : <EditorArea />}
-        {isDecoy ? <DecoyTerminal /> : <Terminal />}
+        {/* EditorArea/Terminal stay mounted in decoy mode so the active
+            game keeps running (per PLAN §4 — boss key is background, not pause). */}
+        <EditorArea hidden={isDecoy} />
+        <Terminal hidden={isDecoy} />
+        {isDecoy && <DecoyEditor />}
+        {isDecoy && <DecoyTerminal />}
       </div>
       <StatusBar />
     </div>

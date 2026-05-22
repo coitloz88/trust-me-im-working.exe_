@@ -13,9 +13,11 @@ const LOG_LINES = [
   { text: '  ➜  press h + enter to show help' },
 ]
 
-export function Terminal() {
+type Props = { hidden?: boolean }
+
+export function Terminal({ hidden }: Props) {
   return (
-    <div className="terminal">
+    <div className="terminal" style={hidden ? { display: 'none' } : undefined}>
       <div className="terminal__header">
         {PANEL_TABS.map((tab, i) => (
           <div
