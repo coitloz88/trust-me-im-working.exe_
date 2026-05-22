@@ -1,0 +1,57 @@
+/* VSCode Dark+ palette as CSS custom properties.
+   Values approximated from the Dark+ theme. All shell colors must reference
+   these tokens — do not hardcode hex values in component styles. */
+
+:root {
+  /* Surfaces */
+  --vsc-bg-editor: #1e1e1e;
+  --vsc-bg-sidebar: #252526;
+  --vsc-bg-activitybar: #333333;
+  --vsc-bg-titlebar: #3c3c3c;
+  --vsc-bg-tabs: #2d2d2d;
+  --vsc-bg-tab-active: #1e1e1e;
+  --vsc-bg-tab-inactive: #2d2d2d;
+  --vsc-bg-panel: #1e1e1e;
+  --vsc-bg-panel-header: #252526;
+  --vsc-bg-statusbar: #007acc;
+  --vsc-bg-hover: #2a2d2e;
+  --vsc-bg-selection: #094771;
+  --vsc-bg-list-active: #37373d;
+
+  /* Borders / dividers */
+  --vsc-border: #3e3e42;
+  --vsc-border-strong: #1e1e1e;
+  --vsc-border-tab-active: #007acc;
+
+  /* Foreground */
+  --vsc-fg: #cccccc;
+  --vsc-fg-strong: #ffffff;
+  --vsc-fg-muted: #858585;
+  --vsc-fg-statusbar: #ffffff;
+  --vsc-fg-tab-active: #ffffff;
+  --vsc-fg-tab-inactive: #969696;
+  --vsc-fg-activitybar: #858585;
+  --vsc-fg-activitybar-active: #ffffff;
+
+  /* Accents (syntax-ish, used sparingly in chrome) */
+  --vsc-accent-blue: #569cd6;
+  --vsc-accent-teal: #4ec9b0;
+  --vsc-accent-yellow: #dcdcaa;
+  --vsc-accent-red: #f48771;
+
+  /* Fonts */
+  --vsc-font-ui: 'Segoe UI', system-ui, sans-serif;
+  --vsc-font-mono: 'Cascadia Code', 'Consolas', ui-monospace, monospace;
+  --vsc-font-size-ui: 13px;
+  --vsc-font-size-editor: 14px;
+  --vsc-font-size-statusbar: 12px;
+
+  /* Geometry */
+  --vsc-h-titlebar: 30px;
+  --vsc-h-tabs: 35px;
+  --vsc-h-statusbar: 22px;
+  --vsc-h-panel-header: 35px;
+  --vsc-w-activitybar: 48px;
+  --vsc-w-sidebar: 240px;
+  --vsc-h-terminal: 220px;
+}
