@@ -1,25 +1,17 @@
-import { useGameStore } from '../store/gameStore'
+type Props = { x: number; y: number }
 
-type Props = {
-  id: string
-  x: number
-  y: number
-}
-
-export function Bug({ id, x, y }: Props) {
-  const killBug = useGameStore((s) => s.killBug)
+export function Bug({ x, y }: Props) {
   return (
     <span
-      onClick={() => killBug(id)}
       style={{
         position: 'absolute',
         left: `${x}%`,
         top: `${y}%`,
         transform: 'translate(-50%, -50%)',
-        fontSize: 20,
+        fontSize: 30,
         lineHeight: 1,
-        cursor: 'pointer',
         userSelect: 'none',
+        pointerEvents: 'none',
       }}
     >
       🐛

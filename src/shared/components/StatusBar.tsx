@@ -11,7 +11,9 @@ export function StatusBar() {
     !isDecoy && match?.params.gameId === 'trust-me-its-vscode'
 
   const score = useGameStore((s) => s.score)
-  const combo = useGameStore((s) => s.combo)
+  const hp = useGameStore((s) => s.hp)
+  const mazeName = useGameStore((s) => s.maze.name)
+  const levelsCleared = useGameStore((s) => s.levelsCleared)
 
   return (
     <div className="statusbar">
@@ -21,10 +23,9 @@ export function StatusBar() {
         <span className="statusbar__item">⊘ 0  ⚠ 0</span>
         {showGameStatus && (
           <>
-            <span className="statusbar__item">Combo: x{combo}</span>
-            <span className="statusbar__item">
-              ▲ {score.toLocaleString()} LOC today
-            </span>
+            <span className="statusbar__item">{'♥'.repeat(Math.max(0, hp))}{'♡'.repeat(Math.max(0, 3 - hp))}</span>
+            <span className="statusbar__item">📁 {mazeName} ({levelsCleared})</span>
+            <span className="statusbar__item">⏱ {score}s</span>
           </>
         )}
       </div>
