@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import { TrustMeItsVscode } from './trust-me-its-vscode'
+import { Backrooms } from './backrooms'
 
 export type Game = {
   id: string
@@ -16,5 +17,12 @@ export const gameRegistry: Game[] = [
     fileName: 'oauth.service.ts',
     folderName: 'trust-me-its-vscode',
     component: TrustMeItsVscode,
+  },
+  {
+    id: 'backrooms',
+    displayName: '백룸',
+    fileName: 'backrooms.tsx',
+    folderName: 'backrooms',
+    component: Backrooms,
   },
 ]

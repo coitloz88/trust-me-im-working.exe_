@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useMatch } from 'react-router-dom'
+import { useMatch, useNavigate } from 'react-router-dom'
 import { useGameStore } from '../../games/trust-me-its-vscode/store/gameStore'
+import { useBackroomsStore } from '../../games/backrooms/store/backroomsStore'
+import { useShellStore } from '../store/shellStore'
 
 const PANEL_TABS = ['Problems', 'Output', 'Debug Console', 'Terminal', 'Ports']
 
@@ -21,30 +23,63 @@ type Props = { hidden?: boolean }
 
 export function Terminal({ hidden }: Props) {
   const [cmd, setCmd] = useState('')
-  const bodyRef = useRef<HTMLDivElement>(null)
+  const bodyRef  = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
 
-  const match = useMatch('/games/:gameId')
-  const isVscode = match?.params.gameId === 'trust-me-its-vscode'
+  const match  = useMatch('/games/:gameId')
+  const gameId = match?.params.gameId
+  const isVscode    = gameId === 'trust-me-its-vscode'
+  const isBackrooms = gameId === 'backrooms'
 
-  const gameOver = useGameStore((s) => s.gameOver)
-  const maze = useGameStore((s) => s.maze)
-  const mazeIndex = useGameStore((s) => s.mazeIndex)
-  const reset = useGameStore((s) => s.reset)
+  // ── runner game state ─────────────────────────────────────
+  const gameOver    = useGameStore((s) => s.gameOver)
+  const distance    = useGameStore((s) => s.distance)
+  const best        = useGameStore((s) => s.best)
+  const runnerReset = useGameStore((s) => s.reset)
 
-  // Focus input and scroll to bottom when game over
+  // ── backrooms state ───────────────────────────────────────
+  const backPhase   = useBackroomsStore((s) => s.phase)
+  const backEscape  = useBackroomsStore((s) => s.escape)
+  const backReset   = useBackroomsStore((s) => s.reset)
+  const resetGlitch = useShellStore((s) => s.resetGlitch)
+  const showBackroomsEscape = isBackrooms && backPhase >= 5
+
+  // Focus + scroll when relevant prompts appear
   useEffect(() => {
-    if (!isVscode || !gameOver) return
-    inputRef.current?.focus()
-    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+    if (isVscode && gameOver) {
+      inputRef.current?.focus()
+      setTimeout(() => {
+        bodyRef.current && (bodyRef.current.scrollTop = bodyRef.current.scrollHeight)
+      }, 0)
+    }
   }, [isVscode, gameOver])
 
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && cmd.trim()) {
-      reset()
-      setCmd('')
+  useEffect(() => {
+    if (showBackroomsEscape) {
+      inputRef.current?.focus()
+      setTimeout(() => {
+        bodyRef.current && (bodyRef.current.scrollTop = bodyRef.current.scrollHeight)
+      }, 0)
     }
+  }, [showBackroomsEscape])
+
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter' || !cmd.trim()) return
+
+    if (isVscode && gameOver) {
+      runnerReset()
+    } else if (showBackroomsEscape) {
+      backEscape()
+      backReset()
+      resetGlitch()
+      navigate('/')
+    }
+    setCmd('')
   }
+
+  // ── Render ────────────────────────────────────────────────
+  const hideBootLines = showBackroomsEscape
 
   return (
     <div className="terminal" style={hidden ? { display: 'none' } : undefined}>
@@ -59,7 +94,7 @@ export function Terminal({ hidden }: Props) {
         ))}
       </div>
       <div className="terminal__body" ref={bodyRef}>
-        {BOOT_LINES.map((line, i) => (
+        {!hideBootLines && BOOT_LINES.map((line, i) => (
           <div key={i} className="terminal__line">
             {line.prompt ? (
               <>
@@ -72,31 +107,26 @@ export function Terminal({ hidden }: Props) {
           </div>
         ))}
 
-        {isVscode && (
-          <>
-            <div className="terminal__line">
-              <span style={{ color: 'var(--vsc-fg-muted)' }}>
-                [LOAD] ./src/games/trust-me-its-vscode/{maze.name}
-              </span>
-            </div>
-            <div className="terminal__line">
-              <span style={{ color: 'var(--vsc-fg-muted)' }}>
-                [WARN] BugSpawner: active · level {mazeIndex + 1} / {3}
-              </span>
-            </div>
-          </>
+        {/* Runner game log */}
+        {isVscode && !gameOver && (
+          <div className="terminal__line">
+            <span style={{ color: 'var(--vsc-fg-muted)' }}>
+              [INFO] runner active · press Space / ↑ / W to jump
+            </span>
+          </div>
         )}
 
         {isVscode && gameOver && (
           <>
             <div className="terminal__line">
-              <span style={{ color: 'var(--vsc-accent-red)' }}>
-                [ERROR] Uncaught BugException: cursor collision detected
-              </span>
+              <span style={{ color: 'var(--vsc-accent-red)' }}>[ERROR] UnhandledRejection: cursor fell out of scope</span>
             </div>
             <div className="terminal__line">
-              <span style={{ color: 'var(--vsc-accent-red)' }}>
-                [FATAL] Process terminated · exit code 1
+              <span style={{ color: 'var(--vsc-accent-red)' }}>[FATAL] Process exited · hp depleted · exit code 1</span>
+            </div>
+            <div className="terminal__line">
+              <span style={{ color: 'var(--vsc-fg-muted)' }}>
+                [INFO]  distance: {distance}m  ·  best: {best}m
               </span>
             </div>
             <div className="terminal__line"><span> </span></div>
@@ -108,16 +138,28 @@ export function Terminal({ hidden }: Props) {
                 onChange={(e) => setCmd(e.target.value)}
                 onKeyDown={handleKey}
                 placeholder="npm run restart"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  color: 'var(--vsc-fg)',
-                  fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  width: 220,
-                  caretColor: 'var(--vsc-fg)',
-                }}
+                style={inputStyle}
+              />
+            </div>
+          </>
+        )}
+
+        {/* Backrooms escape prompt */}
+        {showBackroomsEscape && (
+          <>
+            <div className="terminal__line">
+              <span style={{ color: 'var(--vsc-fg-muted)' }}>[SYSTEM] connection lost</span>
+            </div>
+            <div className="terminal__line"><span> </span></div>
+            <div className="terminal__line">
+              <span className="terminal__path">PS C:\dev\backrooms&gt; </span>
+              <input
+                ref={inputRef}
+                value={cmd}
+                onChange={(e) => setCmd(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder="exit"
+                style={inputStyle}
               />
             </div>
           </>
@@ -125,4 +167,15 @@ export function Terminal({ hidden }: Props) {
       </div>
     </div>
   )
+}
+
+const inputStyle: React.CSSProperties = {
+  background: 'transparent',
+  border: 'none',
+  outline: 'none',
+  color: 'var(--vsc-fg)',
+  fontFamily: 'inherit',
+  fontSize: 'inherit',
+  width: 220,
+  caretColor: 'var(--vsc-fg)',
 }

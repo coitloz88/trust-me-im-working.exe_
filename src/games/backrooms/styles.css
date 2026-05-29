@@ -1,0 +1,51 @@
+/* ── Shaky text ──────────────────────────────────────────────── */
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  20%       { transform: translate(-1px, 1px); }
+  40%       { transform: translate(1px, -1px); }
+  60%       { transform: translate(-1px, -1px); }
+  80%       { transform: translate(1px, 1px); }
+}
+
+.shaky {
+  display: inline-block;
+  animation: shake var(--shake-dur, 0.3s) infinite;
+}
+
+/* ── Backrooms code editor ───────────────────────────────────── */
+.backrooms-editor {
+  display: flex;
+  height: 100%;
+  font-family: var(--vsc-font-mono);
+  font-size: var(--vsc-font-size-editor);
+  overflow: hidden;
+}
+
+.backrooms-editor__content {
+  padding: 8px 0 8px 16px;
+  flex: 1;
+  white-space: pre;
+  line-height: 19px;
+  overflow: hidden;
+}
+
+/* ── White fade overlay ─────────────────────────────────────── */
+.backrooms-whiteout {
+  position: absolute;
+  inset: 0;
+  background: white;
+  pointer-events: none;
+  z-index: 200;
+  transition: opacity 0.3s ease;
+}
+
+/* ── Flicker overlay ────────────────────────────────────────── */
+.backrooms-flicker {
+  position: absolute;
+  inset: 0;
+  background: white;
+  pointer-events: none;
+  z-index: 201;
+  opacity: 0;
+  transition: opacity 0.04s;
+}

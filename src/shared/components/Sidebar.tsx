@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useMatch, useNavigate } from 'react-router-dom'
 import { gameRegistry } from '../../games/registry'
+import { useShellStore } from '../store/shellStore'
 import { FileIcon } from './icons'
 
 type ActivityIcon = {
@@ -105,6 +106,8 @@ function Tree() {
   const navigate = useNavigate()
   const match = useMatch('/games/:gameId')
   const activeId = match?.params.gameId
+  const phantomFiles = useShellStore((s) => s.phantomFiles)
+  const isDecoy = useShellStore((s) => s.isDecoy)
 
   return (
     <div className="sidebar__tree">
@@ -125,6 +128,18 @@ function Tree() {
             <FileIcon />
           </span>
           <span className="tree__label">{game.fileName}</span>
+        </div>
+      ))}
+      {/* Phantom files — only in backrooms mode, never in decoy */}
+      {!isDecoy && phantomFiles.map((name) => (
+        <div
+          key={name}
+          className="tree__node"
+          style={{ paddingLeft: 8, opacity: 0.55, color: 'var(--vsc-accent-red)', cursor: 'default' }}
+        >
+          <span className="tree__chevron tree__chevron--empty" />
+          <span className="tree__icon" style={{ opacity: 0.4 }}>?</span>
+          <span className="tree__label" style={{ color: 'inherit' }}>{name}</span>
         </div>
       ))}
     </div>

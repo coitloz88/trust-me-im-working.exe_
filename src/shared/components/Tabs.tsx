@@ -1,6 +1,7 @@
 import { useMatch } from 'react-router-dom'
 import { gameRegistry } from '../../games/registry'
 import { FileIcon } from './icons'
+import { ShakyText } from './ShakyText'
 
 export function Tabs() {
   const match = useMatch('/games/:gameId')
@@ -13,7 +14,7 @@ export function Tabs() {
           <span className="tab__icon">
             <FileIcon />
           </span>
-          <span>{game.fileName}</span>
+          <span><ShakyText text={game.fileName} /></span>
           <span className="tab__close">×</span>
         </div>
       )}
