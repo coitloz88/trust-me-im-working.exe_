@@ -1,14 +1,14 @@
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { BossKeyProvider } from './shared/bosskey/BossKeyProvider'
 import { Shell } from './shared/components/Shell'
 
 function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter>
       <BossKeyProvider>
         <Shell />
       </BossKeyProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
