@@ -3,6 +3,7 @@ import { useShellStore } from '../store/shellStore'
 import { DecoyEditor } from '../bosskey/DecoyEditor'
 import { DecoyTerminal } from '../bosskey/DecoyTerminal'
 import { MenuBar } from './MenuBar'
+import { MouseTrail } from './MouseTrail'
 import { Sidebar } from './Sidebar'
 import { Tabs } from './Tabs'
 import { EditorArea } from './EditorArea'
@@ -14,6 +15,7 @@ export function Shell() {
 
   return (
     <div className="shell">
+      <MouseTrail />
       <MenuBar />
       <Sidebar />
       <div className="editor-column">
