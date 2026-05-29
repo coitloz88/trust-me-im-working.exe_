@@ -14,7 +14,7 @@ export const gameRegistry: Game[] = [
   {
     id: 'trust-me-its-vscode',
     displayName: 'vscode맞습니다 믿어주세요',
-    fileName: 'oauth.service.ts',
+    fileName: 'async-void.executor.ts',
     folderName: 'trust-me-its-vscode',
     component: TrustMeItsVscode,
   },

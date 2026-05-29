@@ -165,7 +165,7 @@ export function MenuBar() {
         ))}
       </div>
       <span className="menubar__title">
-        <ShakyText text="oauth.service.ts — trust-me-im-working.exe_ — Visual Studio Code" />
+        <ShakyText text="async-void.executor.ts — trust-me-im-working.exe_ — Visual Studio Code" />
       </span>
       <div className="menubar__window">
         <span className="menubar__window-btn">─</span>
